@@ -1,15 +1,37 @@
 const express = require("express");
 const app = express();
+const mongoose = require('mongoose');
 const apiRoutes = require('express').Router();
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const { join } = require('path');
 const users = require('./app/users');
 
 const port = 3000;
+const dbUrl = 'mongodb://pillball:pillball12@ds237717.mlab.com:37717/pillball';
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+function connect() {
+  const options = { server: { socketOptions: { keepAlive: 1 } } };
+  const connection = mongoose.createConnection(dbUrl, options);
+  return connection;
+}
+
+
+const models = join(__dirname, './models');
+
+const db = {};
+fs.readdirSync(models)
+  .filter(file => ~file.indexOf('.js'))
+  .forEach((file) => {
+    const path = require(join(models, file));
+
+    db[path.modelName] = path;
+  });
+
 apiRoutes.get('/helloWorld', function (req, res) {
-    return res.status(200).json({ message: 'Hello World' });
+  return res.status(200).json({ message: 'Hello World' });
 });
 
 apiRoutes.post('/createUser', users.createUser);
@@ -20,6 +42,15 @@ apiRoutes.post('/updateTimes', users.updateTimes);
 
 apiRoutes.post('/updateEmail', users.updateEmail);
 
-app.listen(port, function () {
-    app.use('/api', apiRoutes);
-});
+
+const connection = connect();
+connection
+  .on('error', console.log)
+  .on('disconnected', connect)
+  .once('open', function () {
+    app.listen(port, function () {
+      console.log('Set Up Complete. Listening..');
+      app.use('/api', apiRoutes);
+    });
+  });
+
