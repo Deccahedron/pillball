@@ -8,6 +8,7 @@ const { join } = require('path');
 const users = require('./app/users');
 const port = 3000;
 const dbUrl = 'mongodb://pillball:pillball12@ds237717.mlab.com:37717/pillball';
+const timer = 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
@@ -41,6 +42,7 @@ apiRoutes.post('/updateTimes', users.updateTimes);
 
 apiRoutes.post('/updateEmail', users.updateEmail);
 
+var startService = require("./app/service")(false);
 
 connection
   .on('error', console.log)
