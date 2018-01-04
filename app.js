@@ -6,18 +6,17 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { join } = require('path');
 const users = require('./app/users');
-
 const port = 3000;
 const dbUrl = 'mongodb://pillball:pillball12@ds237717.mlab.com:37717/pillball';
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-function connect() {
+connect = function() {
   const options = { server: { socketOptions: { keepAlive: 1 } } };
-  const connection = mongoose.createConnection(dbUrl, options);
-  return connection;
+  mongoose.connect(dbUrl, options);
+  return mongoose.connection;
 }
-
+const connection = connect();
 
 const models = join(__dirname, './models');
 
@@ -43,7 +42,6 @@ apiRoutes.post('/updateTimes', users.updateTimes);
 apiRoutes.post('/updateEmail', users.updateEmail);
 
 
-const connection = connect();
 connection
   .on('error', console.log)
   .on('disconnected', connect)
@@ -54,3 +52,7 @@ connection
     });
   });
 
+  process.on('uncaughtException', (err) => {
+    console.log(err.message);
+    process.exit(1);
+  });
