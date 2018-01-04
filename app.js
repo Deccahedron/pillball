@@ -7,7 +7,8 @@ const fs = require('fs');
 const { join } = require('path');
 const users = require('./app/users');
 const port = 3000;
-const dbUrl = 'mongodb://pillball:pillball12@ds237717.mlab.com:37717/pillball';
+//TODO: Enter mongodb url here:
+const dbUrl = '';
 const timer = 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
