@@ -6,16 +6,16 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { join } = require('path');
 const users = require('./app/users');
-const port = 3000;
-//TODO: Enter mongodb url here:
-const dbUrl = '';
-const timer = 
+require('dotenv-safe').config();
+
+const port = process.env.PORT;
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 connect = function() {
   const options = { server: { socketOptions: { keepAlive: 1 } } };
-  mongoose.connect(dbUrl, options);
+  mongoose.connect(process.env.DB_URL, options);
   return mongoose.connection;
 }
 const connection = connect();
@@ -55,7 +55,7 @@ connection
     });
   });
 
-  process.on('uncaughtException', (err) => {
-    console.log(err.message);
-    process.exit(1);
-  });
+process.on('uncaughtException', (err) => {
+  console.log(err.message);
+  process.exit(1);
+});

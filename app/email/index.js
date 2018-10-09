@@ -3,7 +3,8 @@ const sendReminder = function (message, emailTo, nameTo) {
 
   const helper = require('sendgrid').mail;
   //TODO: enterGridAPIKey here: 
-  const sendGridId = "";
+  const sendGridId = process.env.SENDGRID_API_KEY;
+  
   const sg = require('sendgrid')(sendGridId);
   const template = "";
   const emailFrom = "reminders@pillball.com";
