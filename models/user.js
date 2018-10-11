@@ -21,5 +21,17 @@ const UserSchema = new mongoose.Schema({
     type: [{ hour: { type: Number, min: 0, max: 23 }, minutes: { type: Number, min: 0, max: 59 } }]
   }
 });
+
+UserSchema.pre('save', async function(next) {
+  const user = this;
+  const emailLower = user.email.toLowerCase();
+  const existing = await model.findOne({ email: emailLower });
+  if (existing) {
+    return next(new Error('This email already exists in the system'));
+  }
+
+  this.email = emailLower;
+})
+
 const model = mongoose.model('User', UserSchema);
 module.exports = model;
