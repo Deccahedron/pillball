@@ -6,4 +6,8 @@ Pillball aims to provide a simple emailing service for those who wish to receive
 
 We also completely support and encourage the addition of community submitted features, so if you want to stretch those coding muscles, feel free to submit your idea and we will endevour to accept it.
 
+#### To Run ###
+
+- Create a .env file in the root of the project copying the contents of the .env.example file. Fill out this file with your credentials
+- Run 'node app.js'
 
