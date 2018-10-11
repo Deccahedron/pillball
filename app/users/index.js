@@ -1,4 +1,5 @@
 const model = require('../../models/user');
+const utils = require('../utils');
 
 const createUser = async function (req, res) {
   try {
@@ -9,6 +10,11 @@ const createUser = async function (req, res) {
     if (!user.email || !user.name) {
       return res.status(400).json({ message: 'Please pass the user email and the user name' });
     }
+
+    if (!utils.validateEmail(user.email)) {
+      return res.status(400).json({ message: 'Please enter a valid email' });
+    }
+
     const created = await model.create(user);
     return res.status(200).json({ user: created });
   } catch (error) {
